@@ -1,14 +1,85 @@
+<!DOCTYPE html>
 <html>
 <head>
-<style>
-H1 {text-align:center}
-BODY {font-family:Helvetica}
-</style>
+<title>Andres Oviedo Personal Web Page</title>
+<link rel="stylesheet" href="site/kickstart/css/kickstart.css"
+	media="all" />
+<!-- <link rel="stylesheet" href="site/font-awesome/css/font-awesome.min.css"> -->
+<link rel="stylesheet" type="text/css" href="site/css/andresoviedo.css">
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+	google.load("feeds", "1");
+	function initialize() {
+		var feed = new google.feeds.Feed(
+				"http://andresoviedo82.blogspot.com/feeds/posts/default");
+		feed.load(function(result) {
+			if (!result.error) {
+				var container = document.getElementById("feed");
+				for (var i = 0; i < result.feed.entries.length; i++) {
+					var entry = result.feed.entries[i];
+
+					var h4 = document.createElement("h5");
+					var a = document.createElement("a");
+					a.appendChild(document.createTextNode(entry.title));
+					a.href = entry.link;
+					h4.appendChild(a);
+					container.appendChild(h4);
+
+					var p = document.createElement("p");
+					p
+							.appendChild(document
+									.createTextNode(entry.contentSnippet));
+					container.appendChild(p);
+				}
+			}
+		});
+	}
+	google.setOnLoadCallback(initialize);
+</script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="site/kickstart/js/kickstart.js"></script>
+
 </head>
 <body>
-<h1>AndresoviedO</h1>
-<h2>Projects</h2>
-<ul><li><a href="google-drive-ftp-adapter">google-drive-ftp-adapter</a></li>
-</ul>
+
+	<div class="grid flex">
+		<div class="row">
+			<div class="col_4">
+				<div class="circular"></div>
+				<div class="headline">
+					<h2>Andres Oviedo</h2>
+					<p>Software Developer living in Barcelona</p>
+					<p></p>
+				</div>
+			</div>
+			<div class="col_8">
+				<h2>Latest Blog Entries</h2>
+				<div id="feed" class="feed_container"></div>
+			</div>
+		</div>
+
+		<div class="col_4">
+			<h3>Networks</h3>
+			<ul>
+				<li><i class="fa fa-github-alt"></i><a
+					href="https://github.com/andresoviedo">https://github.com/andresoviedo</a></li>
+				<li>In contruction...</li>
+			</ul>
+		</div>
+
+		<div class="col_4">
+			<h3>My Certifications</h3>
+			<li>In contruction...</li>
+		</div>
+
+		<div class="col_4">
+			<h3>Projects</h3>
+			<ul>
+				<li><a href="google-drive-ftp-adapter">google-drive-ftp-adapter</a></li>
+				<li>In contruction...</li>
+			</ul>
+		</div>
+	</div>
 </body>
 </html>

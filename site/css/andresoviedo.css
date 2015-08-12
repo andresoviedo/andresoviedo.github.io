@@ -1,0 +1,45 @@
+/* html, body {
+	height: 100%;
+}
+
+html {
+	display: table;
+	margin: auto;
+}
+
+body {
+	display: table-cell;
+	vertical-align: middle;
+} */
+body {
+	font-family: Tahoma, Verdana, Georgia, Serif;
+}
+
+.feed_container {
+	width: 600px;
+	height: 300px;
+	overflow: hidden
+}
+
+.circular {
+	width: 300px;
+	height: 300px;
+	border-radius: 150px;
+	-webkit-border-radius: 150px;
+	-moz-border-radius: 150px;
+	background: url(../images/andresoviedo.jpg) no-repeat;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.headline {
+	text-align: center;
+}
+
+.headline h1 {
+	margin-bottom: 0;
+}
+
+.headline p {
+	margin-top: 0;
+}
