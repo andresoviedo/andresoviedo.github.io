@@ -16,14 +16,13 @@ body {
 }
 
 .feed_container {
-	width: 600px;
-	height: 300px;
+	max-height: 250px;
 	overflow: hidden
 }
 
 .circular {
-	width: 300px;
-	height: 300px;
+	width: 250px;
+	height: 250px;
 	border-radius: 150px;
 	-webkit-border-radius: 150px;
 	-moz-border-radius: 150px;
