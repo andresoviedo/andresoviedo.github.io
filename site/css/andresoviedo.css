@@ -1,26 +1,20 @@
-/* html, body {
-	height: 100%;
-}
+@import
+	url(http://fonts.googleapis.com/css?family=Lato:300,400,700|Raleway:400,300,700)
+	;
 
 html {
-	display: table;
-	margin: auto;
+	background: url(../images/background.jpg) no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: 100% auto;
 }
 
 body {
-	display: table-cell;
-	vertical-align: middle;
-} */
-body {
-	font-family: Tahoma, Verdana, Georgia, Serif;
+	font-family: 'Raleway', Tahoma, Verdana, Georgia, sans-serif;
 }
 
-.feed_container {
-	max-height: 250px;
-	overflow: hidden
-}
-
-.circular {
+.avatar {
 	width: 250px;
 	height: 250px;
 	border-radius: 150px;
@@ -31,14 +25,48 @@ body {
 	margin-right: auto;
 }
 
-.headline {
-	text-align: center;
+.feed_container {
+	max-height: 250px;
+	overflow: hidden;
 }
 
-.headline h1 {
-	margin-bottom: 0;
+.link_icon {
+	width: 16px;
+	height: 16px;
 }
 
-.headline p {
-	margin-top: 0;
+a {
+	/* font-weight: 700; */
+	color: #4D99E0;
+	font-weight: bold;
 }
+
+.visible {
+	border-radius: 10px !important;
+	background: rgba(255, 255, 255, 0.75) !important;
+	padding: 5px !important;
+	height: 100% !important;
+}
+
+.contact_info {
+	background: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Pruebas con CreateiveLinkEffects*/
+/* Overwrite CreateiveLinkEffects size */
+/* nav a {
+	font-size: 1em;
+	margin: 0px;
+	text-transform: none;
+	letter-spacing: normal;
+	color: #4D99E0;
+}
+
+.cl-effect-15 a {
+	color: #ff0000;
+	font-weight: 500;
+}
+
+.cl-effect-15 a::before {
+	color: #4D99E0;
+} */

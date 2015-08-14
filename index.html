@@ -2,9 +2,18 @@
 <html>
 <head>
 <title>Andres Oviedo Personal Web Page</title>
+
+<!-- Creative Links -->
+<!-- <link rel="stylesheet" type="text/css" href="site/CreativeLinkEffects/css/normalize.css" /> -->
+<!-- <link rel="stylesheet" type="text/css" href="site/CreativeLinkEffects/css/demo.css" /> -->
+<!-- <link rel="stylesheet" type="text/css"
+	href="site/CreativeLinkEffects/css/component.css" />
+<script src="site/CreativeLinkEffects/js/modernizr.custom.js"></script> -->
+
+
 <link rel="stylesheet" href="site/kickstart/css/kickstart.css"
 	media="all" />
-<!-- <link rel="stylesheet" href="site/font-awesome/css/font-awesome.min.css"> -->
+
 <link rel="stylesheet" type="text/css" href="site/css/andresoviedo.css">
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
@@ -55,33 +64,32 @@
 	ga('create', 'UA-66312832-1', 'auto');
 	ga('send', 'pageview');
 </script>
+
+
+
 </head>
 <body>
 	<div class="grid flex">
-		<!-- <div class="col_12">
-			<h2 align="center">Andres Oviedo</h2>
-			<p align="center">Software Developer living in Barcelona</p>
-		</div> -->
 		<div class="row">
-			<div class="col_4">
-				<div class="circular"></div>
-				<h3 align="center">
-					Andres Oviedo
-					</h4>
-					<p align="center">Software Developer living in Barcelona</p>
-					<p align="center">
-						<a href="mailto:andresoviedo@gmail.com">andresoviedo@gmail.com</a><br>
-						<i class="fa google-plus fa-1"></i>&nbsp;<a
-							href="https://plus.google.com/+andresoviedo1982/about">https://plus.google.com/+andresoviedo1982/about</a><br>
-						<i class="fa facebook fa-1"></i>&nbsp;<a
-							href="https://www.facebook.com/antresov">https://www.facebook.com/antresov</a><br>
-						<img src="site/images/couchsurfing-icon.png" width="16" height="16">&nbsp;<a
-							href="https://www.couchsurfing.com/people/andresoviedo">https://www.couchsurfing.com/people/andresoviedo</a>
-
-					</p>
+			<div class="col_3 visible contact_info">
+				<div class="avatar"></div>
+				<h4 align="center">Andres Oviedo</h4>
+				<p align="center">Software Developer living in Barcelona</p>
+				<p align="center">
+					<a href="mailto:andresoviedo@gmail.com"
+						data-hover="andresoviedo@gmail.com">andresoviedo@gmail.com</a><br />
+					<i class="fa google-plus fa-1"></i>&nbsp;<a
+						href="https://plus.google.com/+andresoviedo1982/about"
+						data-hover="google.com/+andresoviedo1982/about">google.com/+andresoviedo1982/about</a><br />
+					&nbsp;<a href="https://www.facebook.com/antresov"
+						data-hover="facebook.com/antresov"><i class="fa facebook fa-1"></i>facebook.com/antresov</a><br />
+					<img class="link_icon" src="site/images/couchsurfing-icon.png"></img>&nbsp;<a
+						href="https://www.couchsurfing.com/people/andresoviedo"
+						data-hover="couchsurfing.com/people/andresoviedo">couchsurfing.com/people/andresoviedo</a>
+				</p>
 			</div>
 			<!-- <div class="col_1"></div> -->
-			<div class="col_8">
+			<div class="col_9 visible">
 				<h4>Latest blog entries</h4>
 				<p>Posts about problems I've dealing with and I didn't find the
 					solution on Internet...</p>
@@ -100,82 +108,89 @@
 			</div> -->
 		</div>
 
-		<div class="col_3">
-			<h4>Contributions</h4>
-			<p>I am absolutely convinced that helping other people and
-				sharing knowledge is the fastest way to grow as a community. I also
-				believe that "reinventing the wheel" is a waste of energy, so I
-				share all my work that I found useful to the outside world.</p>
-			<p>These are my current contributions:</p>
-			<ul>
-				<li><i class="fa stack-overflow fa-1"></i>&nbsp;<a
-					href="http://stackoverflow.com/users/863555/andr%C3%A9s">http://stackoverflow.com/users/863555/andr&eacute;s</a></li>
-				<li><i class="fa fa-github-alt fa-1"></i>&nbsp;<a
-					href="https://github.com/andresoviedo">https://github.com/andresoviedo</a></li>
-				<li><img src="site/images/blogspot.png">&nbsp;<a
-					href="http://andresoviedo82.blogspot.com.es/">http://andresoviedo82.blogspot.com.es/</a></li>
-			</ul>
+		<div class="row">
+			<div class="col_3 visible">
+				<h4>Contributions</h4>
+				<p>I am absolutely convinced that helping other people and
+					sharing knowledge is the fastest way to grow as a community. I also
+					believe that "reinventing the wheel" is a waste of energy, so I
+					share all my work that I found useful to the outside world.</p>
+				<p>These are my current contributions:</p>
+				<p>
+					<i class="fa stack-overflow"></i>&nbsp;<a
+						href="http://stackoverflow.com/users/863555/andr%C3%A9s">stackoverflow.com/users/863555/andr&eacute;s</a><br />
+					<i class="fa github-alt"></i>&nbsp;<a
+						href="https://github.com/andresoviedo">github.com/andresoviedo</a><br />
+					<img class="link_icon" src="site/images/blogspot.png">&nbsp;<a
+						href="http://andresoviedo82.blogspot.com.es">andresoviedo82.blogspot.com.es</a>
+				</p>
+			</div>
+
+			<div class="col_3 visible">
+				<h4>Certifications</h4>
+				<p>I don't think official certifications certifies actually that
+					a person has knowledge about a certain matter, but I consider it as
+					a good starting point for other people to start trusting you; at
+					least because it means there is a lot of work behind it.</p>
+				<p>These are my current certifications:</p>
+				<p>
+					<img class="link_icon" src="site/images/spring-icon.png">&nbsp;<a
+						class="lightbox"
+						href="certifications/certification-vmware-spring3.pdf">Spring&nbsp;3.0
+						Professional</a><br /> <img class="link_icon"
+						src="site/images/java-icon.png">&nbsp;<a class="lightbox"
+						href="certifications/certification-oracle-jse6.pdf">Oracle
+						Java&nbsp;6 Programmer</a><br /> <img class="link_icon"
+						src="site/images/java-icon.png">&nbsp;<a class="lightbox"
+						href="certifications/certification-oracle-jee6.pdf">Oracle
+						Jee&nbsp;6 Architect</a>
+				</p>
+			</div>
+
+			<div class="col_3 visible">
+				<h4>Work Experience</h4>
+				<p>More than 12 years of experience working as analist /
+					programmer building applications and Java/Jee architectures,
+					allowed me to establish myself as an expert on the subject.</p>
+				<p>I think my best skill is that of being capable of seeing
+					everything in it's more abstract form; that's why I like to design
+					everything as APIs &amp; frameworks.</p>
+
+				<p>In my linked in profile you can find personal recommendations
+					as well:</p>
+				<p>
+					<i class="fa linkedin"></i>&nbsp;<a
+						href="https://linkedin.com/in/andresoviedo82">linkedin.com/in/andresoviedo82</a><br />
+					<!-- <a href="http://www.infojobs.net/andres-oviedo.prf">infojobs.net/andres-oviedo.prf</a> -->
+
+				</p>
+			</div>
+
+			<div class="col_3 visible">
+				<h4>Open Source Projects</h4>
+				<p>Again... I am absolutely convinced that sharing the work that
+					is already done, is the fastest way to evolve. From my point of
+					view, I believe that the copyright should only mean the
+					"reconnaissance of the artist" and not serve as basis for the
+					capitalism.</p>
+				<p>These are the projects I'm working most actively:</p>
+				<p>
+
+					<a href="google-drive-ftp-adapter">google-drive-ftp-adapter</a><br />
+					<a href="https://github.com/andresoviedo/java-utilities">java-utilities</a><br />
+					<a href="https://github.com/andresoviedo/springJsfJeeFwk">springJsfJeeFwk</a><br />
+					<a href="https://github.com/andresoviedo/android-3DModel">android-3DModel</a>
+				</p>
+			</div>
+
+			<div class="col_12 visible">
+				<h4>Politically Incorrect</h4>
+				<p>Besides my passion for my job, I would also like to share my
+					thoughts about our world... but for this you gonna have to wait til
+					I make some free time to write it ;)</p>
+			</div>
+
 		</div>
-
-		<div class="col_3">
-			<h4>Certifications</h4>
-			<p>I don't think official certifications certifies actually that
-				a person has knowledge about a certain matter, but I consider it as
-				a good starting point for other people to start trusting you; at
-				least because it means there is a lot of work behind it.</p>
-			<p>These are my current certifications:</p>
-			<ul>
-				<li><a href="certifications/certification-vmware-spring3.pdf">Spring&nbsp;3.0
-						Professional</a></li>
-				<li><a href="certifications/certification-oracle-jse6.pdf">Oracle
-						Java&nbsp;6 Programmer</a></li>
-				<li><a href="certifications/certification-oracle-jee6.pdf">Oracle
-						Jee&nbsp;6 Architect</a></li>
-			</ul>
-		</div>
-
-		<div class="col_3">
-			<h4>Work Experience</h4>
-			<p>More than 12 years of experience working as analist /
-				programmer building applications and Java/Jee architectures, allowed
-				me to establish myself as an expert on the subject.</p>
-			<p>I think my best skill is that of being capable of seeing
-				everything in it's more abstract form; that's why I like to design
-				everything as APIs &amp; frameworks.</p>
-
-			<p>In my linked in profile you can find personal recommendations
-				as well:</p>
-			<ul>
-				<li><i class="fa linkedin fa-1"></i>&nbsp;<a
-					href="https://es.linkedin.com/in/andresoviedo82">https://es.linkedin.com/in/andresoviedo82</a></li>
-				<li><img src="site/images/blogspot.png">&nbsp;<a
-					href="http://www.infojobs.net/andres-oviedo.prf">http://www.infojobs.net/andres-oviedo.prf</a></li>
-
-			</ul>
-		</div>
-
-		<div class="col_3">
-			<h4>Open Source Projects</h4>
-			<p>Again... I am absolutely convinced that sharing the work that
-				is already done, is the fastest way to evolve. From my point of
-				view, I believe that the copyright should only mean the
-				"reconnaissance of the artist" and not serve as basis for the
-				capitalism.</p>
-			<p>These are the projects I'm working most actively:</p>
-			<ul>
-				<li><a href="google-drive-ftp-adapter">google-drive-ftp-adapter</a></li>
-				<li><a href="https://github.com/andresoviedo/java-utilities">java-utilities</a></li>
-				<li><a href="https://github.com/andresoviedo/springJsfJeeFwk">springJsfJeeFwk</a></li>
-				<li><a href="https://github.com/andresoviedo/android-3DModel">android-3DModel</a></li>
-			</ul>
-		</div>
-
-		<div class="col_12">
-			<h4>Politically Incorrect</h4>
-			<p>Besides my passion for my job, I would also like to share my
-				thoughts about our world... but for this you gonna have to wait ;)</p>
-		</div>
-
 	</div>
 </body>
 </html>
