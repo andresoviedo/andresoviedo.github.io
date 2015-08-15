@@ -3,7 +3,7 @@
 	;
 
 html {
-	background: url(../images/background.jpg) no-repeat center center fixed;
+	background: #000000 url(../images/background.jpg) no-repeat center top;
 	background-size: 100% auto;
 }
 
@@ -11,21 +11,34 @@ body {
 	font-family: 'Raleway', Tahoma, Verdana, Georgia, sans-serif;
 }
 
-.avatar_eye {
-	width: 300px;
-	height: 300px;
+.visible {
+	border-radius: 10px !important;
+	background: rgba(255, 255, 255, 0.75) !important;
+	padding: 5px !important;
+	height: 100% !important;
+}
+
+.visible.contact_info_container {
+	background: rgba(255, 255, 255, 0.25) !important;
+}
+
+DIV.contact_info {
+	/* background: rgba(255, 255, 255, 0.75); */
+}
+
+DIV.avatar_container {
+	text-align: center;
+}
+
+DIV.avatar_eye {
 	border-radius: 150px;
-	background-color: #802015;
-	color: blue;
 	overflow: hidden;
 	margin: 0 auto;
 }
 
-.avatar {
+IMG.avatar {
 	display: inline-block;
-	width: 300px;
-	height: 300px;
-	/* border-radius: 150px; */
+	width: 100%;
 	overflow: hidden;
 }
 
@@ -37,6 +50,11 @@ body {
 .link_icon {
 	width: 16px;
 	height: 16px;
+	padding-right: 3px;
+	color: #565655;
+}
+
+img .link_icon {
 	align: left;
 }
 
@@ -57,34 +75,3 @@ a:hover {
 	transition: all 0.25s ease;
 	letter-spacing: 0.01em;
 }
-
-.visible {
-	border-radius: 10px !important;
-	background: rgba(255, 255, 255, 0.75) !important;
-	padding: 5px !important;
-	height: 100% !important;
-}
-
-.contact_info {
-	background: rgba(255, 255, 255, 0.25) !important;
-	text-align: center;
-}
-
-/* Pruebas con CreateiveLinkEffects*/
-/* Overwrite CreateiveLinkEffects size */
-/* nav a {
-	font-size: 1em;
-	margin: 0px;
-	text-transform: none;
-	letter-spacing: normal;
-	color: #4D99E0;
-}
-
-.cl-effect-15 a {
-	color: #ff0000;
-	font-weight: 500;
-}
-
-.cl-effect-15 a::before {
-	color: #4D99E0;
-} */
