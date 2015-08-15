@@ -12,40 +12,22 @@ body {
 	font-family: 'Raleway', Tahoma, Verdana, Georgia, sans-serif;
 }
 
-.visible {
-	border-radius: 10px !important;
-	background: rgba(255, 255, 255, 0.75) !important;
-	padding: 5px !important;
-	height: 100% !important;
-}
-
-.visible.contact_info_container {
-	background: rgba(255, 255, 255, 0.25) !important;
-}
-
-DIV.contact_info {
-	/* background: rgba(255, 255, 255, 0.75); */
-}
-
-DIV.avatar_container {
-	text-align: center;
-}
-
-DIV.avatar_eye {
-	border-radius: 150px;
+/* unvisited link */
+a {
+	white-space: nowrap;
+	color: #0066FF;
+	font-weight: bold;
 	overflow: hidden;
-	margin: 0 auto;
+	/* text-overflow: ellipsis; */
+	display: block;
+	transition: all 0.5s ease;
 }
 
-IMG.avatar {
-	display: inline-block;
-	width: 100%;
-	overflow: hidden;
-}
-
-.feed_container {
-	max-height: 250px;
-	overflow: hidden;
+/* mouse over link */
+a:hover {
+	color: #FF3300;
+	transition: all 0.25s ease;
+	letter-spacing: 0.02em;
 }
 
 .link_icon {
@@ -59,20 +41,48 @@ img .link_icon {
 	align: left;
 }
 
-/* unvisited link */
-a {
-	white-space: nowrap;
-	color: #0066FF;
-	font-weight: bold;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	display: block;
-	transition: all 0.25s ease;
+.visible {
+	border-radius: 25px;
+	background: rgba(255, 255, 255, 0.5) !important;
+	height: 100% !important;
+	text-align: center;
 }
 
-/* mouse over link */
-a:hover {
-	color: #FF3300;
-	transition: all 0.25s ease;
-	letter-spacing: 0.01em;
+.visible.contact_info_container {
+	border-radius: 25px 25px 25px 25px;
+	background: rgba(255, 255, 255, 0.0) !important;
+	border: 0px;
+	width: 100%;
+	overflow: hidden;
+}
+
+DIV.contact_info {
+	background: rgba(255, 255, 255, 0.5) !important;
+}
+
+DIV.avatar_container {
+	border-radius: 360px;
+	overflow: hidden;
+}
+
+IMG.avatar {
+	width: 100%;
+}
+
+DIV.feed_container {
+	max-height: 400px;
+	overflow: hidden;
+}
+
+.grid {
+	padding: 0px !important;
+}
+
+.grid.inner {
+	margin: 0px auto;
+}
+
+DIV.empty {
+	background: rgba(255, 255, 255, 0.0) !important;
+	border: 0px !important;
 }
