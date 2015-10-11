@@ -28,6 +28,7 @@ blockquote {
 
 .wmd-preview 
 { 
+	border-radius: 25px;
 	background-color: rgba(255, 255, 255, 0.5) !important; 
 	padding: 10px;
 }
