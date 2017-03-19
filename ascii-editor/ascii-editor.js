@@ -82,10 +82,13 @@ Coord.prototype = {
 	, hasSameAxis : function(other) {
 		return this.x == other.x || this.y == other.y;
 	}
+	, isOppositeDir: function(other){
+		return this.add(other).getLength() == 0;
+	}
 }
 
 // Basic constants
-var leftCoord = new Coord(-1, 0), rightCoord = new Coord(1, 0), topCoord = new Coord(0, -1), bottomCoord = new Coord(0, 1);
+var zeroCoord = new Coord(0,0), leftCoord = new Coord(-1, 0), rightCoord = new Coord(1, 0), topCoord = new Coord(0, -1), bottomCoord = new Coord(0, 1);
 var contextCoords = [leftCoord, rightCoord, topCoord, bottomCoord];
 
 //------------------------------------------------- PIXEL CLASS -----------------------------------------------------//
@@ -260,7 +263,7 @@ Grid.prototype = {
 				// get pixel value we are overwriting
 				pixelValue2 = this.getPixel(pixelCoord2).getValue();
 				// stack the pixel we are overwriting
-				this.stackPixel(pixelCoord2, pixelValue != null? pixelValue : pixelValue2 != null? pixelValue2 : " ");
+				this.stackPixel(pixelCoord2, pixelValue != null? pixelValue : pixelValue2 != null && pixelValue2 != ""? pixelValue2 : " ");
 			}
 		}
 	}
@@ -523,7 +526,7 @@ function Box(coordA, coordB) {
 }
 
 Box.prototype = {
-	containsCoord : function(coord){
+	contains : function(coord){
 		return coord && coord.x >= this.minX && coord.x <= this.maxX && coord.y >= this.minY && coord.y <= this.maxY;
 	}
 	, add : function(coord){
@@ -587,12 +590,16 @@ DrawableCanvas.prototype = {
 		var bottom = this.isDrawChar(this.canvas.getPixel(coord.add(bottomCoord)));
 		return new PixelContext(left, right, top, bottom);
 	}
-	, drawLine : function(startCoord, endCoord, drawHorizontalFirst, pixelValue, ommitIntersections) {
+	, drawLine : function(startCoord, endCoord, mode, pixelValue, ommitIntersections) {
 		// console.log("Drawing line from "+startCoord+" to "+endCoord+" with value '"+pixelValue+"'...");
-		if (drawHorizontalFirst == "step-horizontal" || drawHorizontalFirst == "step-vertical"){
-			return this.drawLineImpl2(startCoord, endCoord, drawHorizontalFirst, pixelValue, ommitIntersections);
+		if (mode == "best"){
+			return this.drawLineImpl3(startCoord, endCoord, mode, pixelValue, ommitIntersections);
 		}
-		return this.drawLineImpl(startCoord, endCoord, drawHorizontalFirst, pixelValue, ommitIntersections);
+		if (mode == "horizontal-horizontal" || mode == "vertical-vertical"
+			|| mode == "vertical-horizontal" || mode == "vertical-horizontal"){
+			return this.drawLineImpl2(startCoord, endCoord, mode, pixelValue, ommitIntersections);
+		}
+		return this.drawLineImpl(startCoord, endCoord, mode, pixelValue, ommitIntersections);
 	}
 	/**
 	 * This functions draws a line of pixels from startCoord to endCoord. The line can be drawn 2 ways: either first horizontal line of first vertical line.
@@ -623,15 +630,25 @@ DrawableCanvas.prototype = {
 	}
 	// draw stepped line
 	, drawLineImpl2 : function(startCoord, endCoord, drawMode, pixelValue, ommitIntersections) {
-		var box = new Box(startCoord, endCoord), minX = box.minX, minY = box.minY, maxX = box.maxX, maxY = box.maxY;
-		var midCoord1 = drawMode == "step-horizontal"? new Coord(box.midX, startCoord.y) : new Coord(startCoord.x, box.midY);
-		var midCoord2 = drawMode == "step-horizontal"? new Coord(box.midX, endCoord.y) : new Coord(endCoord.x, box.midY);
-		this.drawLineImpl(startCoord, midCoord1, drawMode == "step-horizontal", pixelValue, ommitIntersections);
-		this.drawLineImpl(midCoord1, midCoord2, drawMode != "step-horizontal", pixelValue, ommitIntersections);
-		this.drawLineImpl(midCoord2, endCoord, drawMode == "step-horizontal", pixelValue, ommitIntersections);
+		if (drawMode == "horizontal-horizontal" || drawMode == "vertical-vertical"){
+			var box = new Box(startCoord, endCoord), minX = box.minX, minY = box.minY, maxX = box.maxX, maxY = box.maxY;
+			var midCoord1 = null;
+			var midCoord2 = null;
+			if (drawMode == "horizontal-horizontal") { midCoord1 = new Coord(box.midX, startCoord.y); midCoord2 = new Coord(box.midX, endCoord.y); }
+			if (drawMode == "vertical-vertical") { midCoord1 = new Coord(startCoord.x, box.midY); midCoord2 = new Coord(endCoord.x, box.midY); }
+			this.drawLineImpl(startCoord, midCoord1, drawMode == "horizontal-horizontal", pixelValue, ommitIntersections);
+			this.drawLineImpl(midCoord1, midCoord2, drawMode != "horizontal-horizontal", pixelValue, ommitIntersections);
+			this.drawLineImpl(midCoord2, endCoord, drawMode == "horizontal-horizontal", pixelValue, ommitIntersections);
+		}
+		else if (drawMode == "horizontal-vertical" || drawMode == "vertical-horizontal"){
+			this.drawLineImpl(startCoord, endCoord, drawMode == "horizontal-vertical", pixelValue, ommitIntersections);
+		}
+	}
+	, drawLineImpl3 : function(startCoord, endCoord, drawMode, pixelValue, ommitIntersections) {
+		console.log("au");
 	}
 	, getTextStart : function(startCoord) {
-		// guess where the text starts
+		// guess where the text starts (leftmost col and upmost row)
 		var startingColumn = startCoord.x;
 		for (col=startingColumn; col>=0; col--){
 			pixel = this.grid.getPixel(new Coord(col,startCoord.y));
@@ -658,6 +675,32 @@ DrawableCanvas.prototype = {
 			startingRow = row;
 		}
 		return new Coord(startingColumn, startingRow);
+	}, getTextColStart : function(startCoord) {
+		// guess where the text starts
+		var chars_found = 0;
+		var startingColumn = startCoord.x;
+		for (col=startingColumn; col>=0; col--){
+			pixel = this.grid.getPixel(new Coord(col,startCoord.y));
+			if (this.isDrawChar(pixel)){
+				break;
+			}
+			previousPixelValue = pixel.getValue();
+			if (previousPixelValue == null){
+				if (col == 0){
+					break;
+				} else{
+					pixel2 = this.grid.getPixel(new Coord(col-1,startCoord.y));
+					previousPixelValue2 = pixel2.getValue();
+					if (previousPixelValue2 == null || this.isDrawChar(pixel2)) break;
+				}
+			}
+			else{
+				chars_found++;
+			}
+			startingColumn = col;
+		}
+		if (chars_found==0) return null;
+		return new Coord(startingColumn, startCoord.y);
 	}
 
 	/*
@@ -748,18 +791,18 @@ DrawableCanvas.prototype = {
 	  }
 	}
 	, getLinePoints : function(coord, direction) {
-		var ret = [coord];
+		var ret = [];
 	  for (var i=0, currentCoord = coord, currentDirection = direction; i< 1000;i++) {
 			var currentPixelContext = this.getPixelContext(currentCoord);
-	    var nextCoord = currentCoord.add(currentDirection);
+			var nextCoord = currentCoord.add(currentDirection);
 			var isNextPixelDrawChar = this.isDrawChar(this.canvas.getPixel(nextCoord));
-			if(currentPixelContext.getLength() == 2 && isNextPixelDrawChar){ ret.push(currentCoord); currentCoord = nextCoord; continue; }
-			if(currentPixelContext.getLength() >= 3 && !currentCoord.equals(coord)) return ret.push(currentCoord), ret;
-			if(currentPixelContext.left && currentDirection.add(leftCoord).getLength() != 0) { ret.push(currentCoord); currentCoord = currentCoord.add(leftCoord); currentDirection = leftCoord; continue; }
-			if(currentPixelContext.right && currentDirection.add(rightCoord).getLength() != 0) { ret.push(currentCoord); currentCoord = currentCoord.add(rightCoord); currentDirection = rightCoord; continue; }
-			if(currentPixelContext.top && currentDirection.add(topCoord).getLength() != 0) { ret.push(currentCoord); currentCoord = currentCoord.add(topCoord); currentDirection = topCoord; continue; }
-			if(currentPixelContext.bottom && currentDirection.add(bottomCoord).getLength() != 0) { ret.push(currentCoord); currentCoord = currentCoord.add(bottomCoord); currentDirection = bottomCoord; continue; }
-			return currentCoord.equals(coord)? null : ret.push(currentCoord), ret;
+			if(currentPixelContext.length >= 3 && !currentCoord.equals(coord)) return ret;
+			if(currentPixelContext.length >= 2 && isNextPixelDrawChar){ ret.push(currentCoord); currentCoord = currentCoord.add(currentDirection); continue; }
+			if(currentPixelContext.left && !currentDirection.isOppositeDir(leftCoord)) { currentDirection = leftCoord; continue; }
+			if(currentPixelContext.right && !currentDirection.isOppositeDir(rightCoord)) { currentDirection = rightCoord; continue; }
+			if(currentPixelContext.top && !currentDirection.isOppositeDir(topCoord)) { currentDirection = topCoord; continue; }
+			if(currentPixelContext.bottom && !currentDirection.isOppositeDir(bottomCoord)) { currentDirection = bottomCoord; continue; }
+			return ret.length == 1? null : ret.push(currentCoord), ret;
 	  }
 	}
 	, detectEndPoints : function(coord){
@@ -795,6 +838,40 @@ DrawableCanvas.prototype = {
 			}
 		}
 		return endPointsInfo;
+	}
+	, detectBox(coord){
+		if (!this.isDrawChar(this.canvas.getPixel(coord))) return null; // did you click on the right place?
+		var loopCoords = {left:1, right:1, top:1, bottom:1};
+		var firstDir = null;
+		var pixelContext = this.getPixelContext(coord);
+		if (pixelContext.right) firstDir = rightCoord;
+		else if (pixelContext.bottom) firstDir = bottomCoord;
+		else if (pixelContext.top) firstDir = topCoord;
+		else if (pixelContext.left) firstDir = leftCoord;
+		var points = [];
+		for (var i=0, currentCoord = coord, currentDirection = firstDir; i< 1000;i++) {
+			pixelContext = this.getPixelContext(currentCoord);
+			if (pixelContext.getLength() < 2) return null; // dead end
+	    var nextCoord = currentCoord.add(currentDirection); // let's try next char
+			if (nextCoord.equals(coord)) return points; // loop complete :)
+			var isNextPixelDrawChar = this.isDrawChar(this.canvas.getPixel(nextCoord));
+			if (pixelContext.getLength() >= 2 && isNextPixelDrawChar) { points.push(currentCoord); currentCoord	= nextCoord; continue; }
+			if (pixelContext.bottom && loopCoords["bottom"] && !currentDirection.isOppositeDir(bottomCoord)) { loopCoords["bottom"]=0; currentDirection = bottomCoord; continue; }
+			if (pixelContext.left && loopCoords["left"] && !currentDirection.isOppositeDir(leftCoord)) { loopCoords["left"]=0; currentDirection = leftCoord; continue; }
+			if (pixelContext.top && loopCoords["top"] && !currentDirection.isOppositeDir(topCoord)) { loopCoords["top"]=0; currentDirection = topCoord; continue; }
+			if (pixelContext.right && loopCoords["right"] && !currentDirection.isOppositeDir(rightCoord)) { loopCoords["right"]=0; currentDirection = rightCoord; continue; }
+			return null; // d'oh! loop incomplete
+		}
+	}
+	, getBox(points){
+		var minX=Number.MAX_VALUE,maxX=Number.MIN_VALUE, minY=Number.MAX_VALUE, maxY=Number.MIN_VALUE;
+		for (i in points){ p = points[i]; minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x); minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y); }
+		return new Box(new Coord(minX,minY),new Coord(maxX,maxY));
+	}
+	, getEndPoints(points){
+		var ret = [];
+		for (i in points){ p = points[i]; if (this.getPixelContext(p).getLength() >= 3) ret.push(p); }
+		return ret;
 	}
 	, isDrawCharArea: function(area){
 		if (this.canvas.isOutOfBounds(area.min) || this.canvas.isOutOfBounds(area.max)) throw "OutOfBoundException";
@@ -1095,11 +1172,7 @@ PointerDecorator.prototype = {
 		// check if there is the pointer is inside the canvas
 		if (this.getSelectedCell() == null){ return; }
 		// move selected cell with the arrows & backspace key
-		if (eventObject.keyCode == KeyEvent.DOM_VK_BACK_SPACE) {
-			if (this.canvas.getPixel(this.getSelectedCell().add(leftCoord)) != undefined){
-				this.setSelectedCell(this.getSelectedCell().add(leftCoord));
-			}
-  	} else if (eventObject.keyCode == KeyEvent.DOM_VK_LEFT){
+		if (eventObject.keyCode == KeyEvent.DOM_VK_LEFT){
   		this.setSelectedCell(this.getSelectedCell().add(leftCoord));
   	}	else if (eventObject.keyCode == KeyEvent.DOM_VK_RIGHT){
   		this.setSelectedCell(this.getSelectedCell().add(rightCoord));
@@ -1141,11 +1214,8 @@ WritableCanvas.prototype = {
 		}*/
 		// delete previous character
 		else if (eventObject.keyCode == KeyEvent.DOM_VK_BACK_SPACE) {
-			// fix this: this is coupled to whether the pointer decorator is called first or after
-			/*if (this.canvas.getPixel(this.canvas.getSelectedCell().add(leftCoord)) != undefined){
-				this.canvas.import(" ",this.canvas.getSelectedCell().add(leftCoord));
-			}*/
-			if (this.canvas.getPixel(this.canvas.getSelectedCell()) != undefined){
+			if (this.canvas.getPixel(this.canvas.getSelectedCell().add(leftCoord)) != undefined){
+				this.canvas.setSelectedCell(this.canvas.getSelectedCell().add(leftCoord));
 				this.importChar(" ");
 			}
   	}
@@ -1158,6 +1228,13 @@ WritableCanvas.prototype = {
 			currentText = currentText.substring(1)+" ";
 			this.importChar(currentText);
   	}
+		// jump to next line
+		else if (eventObject.keyCode == KeyEvent.DOM_VK_RETURN){
+			var startOfText = this.canvas.getTextColStart(this.canvas.getSelectedCell());
+			if (startOfText && startOfText.add(bottomCoord)){
+				this.canvas.setSelectedCell(startOfText.add(bottomCoord));
+			}
+		}
 	}
 	, keyPress : function(eventObject){
 		// propagate event
@@ -1375,7 +1452,7 @@ class SelectTool extends CanvasTool {
 		// user is selecting, either to start a new selection or to move selection
 		if (this.mouseStatus == "down"){
 			// check if user is starting new selection
- 			if (this.finalBox == null || !this.finalBox.containsCoord(coord)){
+ 			if (this.finalBox == null || !this.finalBox.contains(coord)){
 				this.finalBox = null;
 				this.selectionArea = null;
 				this.canvas.rollback();
@@ -1386,7 +1463,7 @@ class SelectTool extends CanvasTool {
 
 		if (this.mouseStatus == "dragging") {
 			// user is moving selection
-			if (this.finalBox != null && this.finalBox.containsCoord(coord)	|| this.finalMove != null && this.finalMove.containsCoord(coord)){
+			if (this.finalBox != null && this.finalBox.contains(coord)	|| this.finalMove != null && this.finalMove.contains(coord)){
 				// move implementation
 				this.canvas.rollback();
 				// calculate movement difference
@@ -1443,12 +1520,41 @@ class SelectTool extends CanvasTool {
 		if (this.selectedBox == null) return;
 		// move box
 		this.canvas.rollback();
-		this.stackConnections(this.selectedBox);
+		this.drawConnections(this.selectedBox,zeroCoord,"");
 		this.canvas.moveArea(this.selectedBox.box,coord.substract(this.startCoord));
-		this.drawConnections(this.selectedBox,coord.substract(this.startCoord));
+		this.drawConnections(this.selectedBox,coord.substract(this.startCoord),"-");
 		this.changed = true;
 	}
 	detectBox(coord){
+		var boxPoints = this.canvas.detectBox(coord);
+		if (boxPoints == null) return null;
+		var box = this.canvas.getBox(boxPoints);
+		var endPoints = this.canvas.getEndPoints(boxPoints);
+		// for (var point in boxPoints){ this.canvas.stackPixel(boxPoints[point],'-');	} // debug
+		// this.canvas.stackPixel(box.min,'+'); this.canvas.stackPixel(box.max,'+'); // debug
+		// for (var point in endPoints){ this.canvas.stackPixel(endPoints[point],'+');	} // debug
+		return new BoxInfo(boxPoints, box, endPoints);
+	}
+	detectConnectedBoxes(boxInfo){
+		if (boxInfo == null || boxInfo.connectors.length == 0) return; // no T or + connections
+		var connectors = boxInfo.connectors;
+		var connections = boxInfo.connections;
+		for (var i in connectors){
+			var start = connectors[i];
+			for (var j in contextCoords){
+				var dir = contextCoords[j];
+				var next = start.add(dir);
+				if (boxInfo.box.contains(next)) continue;
+				var linePoints = this.canvas.getLinePoints(start, dir)
+				/*for (var k in linePoints){
+					this.canvas.stackPixel(linePoints[k],'?');
+				}*/
+				if (linePoints == null) continue; // error somewhere!
+				connections.push(new Connection(linePoints));
+			}
+		}
+	}
+	detectBox_with_endPoints(coord){
 		// detect corner endpoints & connection endpoints
 		var cornerEndPoints = [];
 		var connectionEndPoints = [];
@@ -1483,16 +1589,16 @@ class SelectTool extends CanvasTool {
 		// test if both childs are the opposite corner
 		if (startCoordIsCorner && childCorners1[0].position.equals(childCorners2[0].position)){
 			console.log("Detected box type 1");
-			return new BoxInfo(new Box(this.startCoord,childCorners1[0].position),connectionEndPoints);
+			return new BoxInfo(new Box(null, this.startCoord,childCorners1[0].position),connectionEndPoints);
 		}
 		// test whether the user click on a side of the box
 		if (!startCoordIsCorner && this.canvas.isDrawCharArea(new Box(childCorners1[0].position,childCorners2[0].position))){
 			console.log("Detected box type 2");
-			return new BoxInfo(new Box(epCorner1.position, childCorners2[0].position),connectionEndPoints);
+			return new BoxInfo(new Box(null, epCorner1.position, childCorners2[0].position),connectionEndPoints);
 		}
 		return null;
 	}
-	detectConnectedBoxes(boxInfo){
+	detectConnectedBoxes_with_endpoints(boxInfo){
 		if (boxInfo == null) return null;
 		var connectorEndPoints = boxInfo.connectors;
 		var possibleBoxEndpoints = [];
@@ -1515,18 +1621,20 @@ class SelectTool extends CanvasTool {
 		if (!pixelContext.top) return bottomCoord;
 		if (!pixelContext.bottom) return topCoord;
 	}
-	stackConnections(boxInfo){
-		if (boxInfo.connections.length > 0){
-			var connection = boxInfo.connections[0];
-			for (var point in connection.points){
-				this.canvas.stackPixel(connection.points[point]," ");
-			}
-		}
-	}
-	drawConnections(boxInfo,coordDiff){
-		if (boxInfo.connections.length > 0){
-			var connection = boxInfo.connections[0];
-			this.canvas.drawLine(connection.points[0].add(coordDiff), connection.points[connection.points.length-1], "step-horizontal", "-");
+	drawConnections(boxInfo,coordDiff,value){
+		if (boxInfo == null || boxInfo.connections.length == 0) return;
+		for (var i in boxInfo.connections){
+			var connection = boxInfo.connections[i];
+			var horizontalLength = connection.getDirection().add(rightCoord).getLength();
+			var horizontalLength2 = connection.getEndDirection().add(rightCoord).getLength();
+			var dir = horizontalLength == 0 || Math.abs(horizontalLength) >= 2;
+			var dir2 = horizontalLength2 == 0 || Math.abs(horizontalLength2) >= 2;
+			var lineType = null;
+			if (dir && dir2) lineType = "horizontal-horizontal";
+			if (!dir && !dir2) lineType = "vertical-vertical";
+			if (dir && !dir2) lineType = "horizontal-vertical";
+			if (!dir && dir2) lineType = "vertical-horizontal";
+			this.canvas.drawLine(connection.points[0].add(coordDiff), connection.points[connection.points.length-1], lineType, value);
 		}
 	}
 }
@@ -1652,7 +1760,8 @@ class EndPointInfo {
 }
 
 class BoxInfo {
-	constructor(box,connectors){
+	constructor(points, box,connectors){
+		this.points = points;
 		this.box = box;
 		this.connectors = connectors;
 		this.connections = [];
@@ -1662,6 +1771,12 @@ class BoxInfo {
 class Connection {
 	constructor(points){
 		this.points = points;
+	}
+	getDirection(){
+		return this.points[1].substract(this.points[0]);
+	}
+	getEndDirection(){
+		return this.points[this.points.length-1].substract(this.points[this.points.length-2]);
 	}
 }
 
@@ -1802,6 +1917,29 @@ class BoxDrawerTool extends CanvasTool {
 	}
 	cursor() {
 		return "crosshair";
+	}
+}
+
+class LineTool extends CanvasTool {
+	constructor(toolId, canvas){
+		super(toolId);
+		this.canvas = canvas;
+		this.startCoord = null;
+		this.mouseStatus = null;
+	}
+	cellDown(coord) {
+		this.mouseStatus = "down";
+		this.startCoord = coord;
+	}
+	cellMove(coord) {
+		if (this.mouseStatus == "down"){
+			this.canvas.rollback();
+			this.canvas.drawLine(this.startCoord, coord, "best", "-");
+		}
+	}
+	cellUp(){
+		this.mouseStatus = "up";
+		this.canvas.rollback();
 	}
 }
 
@@ -2051,6 +2189,8 @@ function init(){
 	controller.addTool(new ExportASCIITool("export-button", canvas, "#canvas-container", "#dialog-widget"));
 	// add draw box capabilities
 	controller.addTool(new BoxDrawerTool("box-button", canvas));
+	// add line drawing capabilities
+	controller.addTool(new LineTool("line-button", canvas));
 	// add selection capabilities
 	controller.addTool(new SelectTool("select-button", canvas));
 	// set default tool
