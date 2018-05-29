@@ -38,7 +38,7 @@ function FindProxyForURL(url, host) {
 	liste_flux_proxy["*timestamp.globalsign.com*"] = "DIRECT"
 	
 	/******************************************************************************
-	 ********************* Liste des flux proxyfiés La Poste **********************
+	 ********************* Liste des flux proxyfiÃ©s La Poste **********************
 	 ******************************************************************************/
 	// Outils
 	liste_flux_proxy["www.wac.courrier.intra.laposte.fr"] = "LAPOSTE";
@@ -47,7 +47,7 @@ function FindProxyForURL(url, host) {
 	liste_flux_proxy["zelos.courrier.intra.laposte.fr"] = "LAPOSTE";
 	liste_flux_proxy["www.ged.courrier.intra.laposte.fr"] = "LAPOSTE";
 	liste_flux_proxy["marionet.build.courrier.intra.laposte.fr"] = "LAPOSTE";
-	liste_flux_proxy["rao.net-courrier.extra.laposte.fr"] = "LAPOSTE"; // Pas encore activé
+	liste_flux_proxy["rao.net-courrier.extra.laposte.fr"] = "LAPOSTE"; // Pas encore activÃ©
 
 	// BNUM	
 	liste_flux_proxy["boutique.uat1.net3-courrier.extra.laposte.fr"] = "LAPOSTE";
@@ -78,7 +78,7 @@ function FindProxyForURL(url, host) {
 	
 	
 	/******************************************************************************
-	 *********************** Filtrage à partir de la liste ************************
+	 *********************** Filtrage Ã  partir de la liste ************************
 	 ******************************************************************************/
 
 	for (flux_proxy in liste_flux_proxy) {
