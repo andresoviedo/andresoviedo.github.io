@@ -6,6 +6,7 @@ var result = inliner.inline({
     output : "dist",
     img: true,
     css: true,
+    js: true
 });
 
 console.log(result);

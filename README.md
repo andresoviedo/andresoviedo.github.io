@@ -1,11 +1,8 @@
 Personal Web Page
 =================
 
-**Technologies used**:
+# Stack
 
 - HTML
-- javascript & jQuery for integration
-- Kickstart style for layout
-- google blog reader for blog
-- pagedown for markdown
-
+- CSS: flex box
+- nodejs: inline-resource

@@ -1,0 +1,29 @@
+{
+  "name": "org.andresoviedo",
+  "version": "1.0.0",
+  "description": "Personal Web Site",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node inline.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andresoviedo/andresoviedo.github.io.git"
+  },
+  "keywords": [
+    "Andres",
+    "Oviedo",
+    "Personal",
+    "Site"
+  ],
+  "author": "Andres Oviedo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andresoviedo/andresoviedo.github.io/issues"
+  },
+  "homepage": "https://github.com/andresoviedo/andresoviedo.github.io#readme",
+  "dependencies": {
+    "inline-resource": "^0.1.7"
+  }
+}
